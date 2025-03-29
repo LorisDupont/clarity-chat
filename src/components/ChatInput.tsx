@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { QuestionType } from '@/context/CoursesContext';
 import { sendQuestion } from '@/services/aiService';
+import { log } from 'console';
 
 interface ChatInputProps {
   onSendMessage: (message: string, type: QuestionType, options?: string[], correctAnswer?: string) => void;
@@ -22,6 +23,7 @@ const ChatInput: React.FC<ChatInputProps> = ({ onSendMessage }) => {
     if (messageType === 'regular') {
       if (message.trim()) {
         onSendMessage(message, 'regular');
+        console.log(message)
         sendQuestion(message)
         setMessage('');
       }

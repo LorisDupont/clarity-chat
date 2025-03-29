@@ -39,7 +39,7 @@ interface CoursesContextType {
 // Mock data
 const MOCK_COURSES: Course[] = [
   {
-    id: '1',
+    id: '10',
     title: 'Mathématiques',
     description: 'Algèbre et géométrie',
     instructor: 'Prof. Thomas Bernard',
@@ -53,7 +53,7 @@ const MOCK_COURSES: Course[] = [
     ],
     materials: [
       {
-        id: '1',
+        id: '100',
         title: 'Introduction à l\'algèbre',
         type: 'pdf',
         url: '/mocks/sample.pdf',
@@ -62,13 +62,13 @@ const MOCK_COURSES: Course[] = [
     ]
   },
   {
-    id: '2',
+    id: '20',
     title: 'Physique',
     description: 'Mécanique et électricité',
     instructor: 'Dr. Marie Leroy',
     messages: [
       {
-        id: '1',
+        id: '145',
         sender: 'system',
         content: 'Bienvenue dans le cours de Physique. Comment puis-je vous aider?',
         timestamp: new Date('2023-05-10T10:00:00')
@@ -76,7 +76,7 @@ const MOCK_COURSES: Course[] = [
     ],
     materials: [
       {
-        id: '1',
+        id: '176',
         title: 'Lois de Newton',
         type: 'pdf',
         url: '/mocks/sample.pdf',
@@ -85,13 +85,13 @@ const MOCK_COURSES: Course[] = [
     ]
   },
   {
-    id: '3',
+    id: '30',
     title: 'Histoire',
     description: 'Histoire moderne',
     instructor: 'Prof. Jean Dupont',
     messages: [
       {
-        id: '1',
+        id: '133',
         sender: 'system',
         content: 'Bienvenue dans le cours d\'Histoire. Comment puis-je vous aider?',
         timestamp: new Date('2023-05-10T10:00:00')
@@ -99,7 +99,7 @@ const MOCK_COURSES: Course[] = [
     ],
     materials: [
       {
-        id: '1',
+        id: '14534',
         title: 'La Révolution française',
         type: 'pdf',
         url: '/mocks/sample.pdf',
