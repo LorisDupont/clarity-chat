@@ -14,7 +14,7 @@ import { FileText, Video, Upload as UploadIcon } from 'lucide-react';
 const Upload: React.FC = () => {
   const { isTeacher } = useAuth();
   const navigate = useNavigate();
-  const { courses } = useCourses();
+  const { courses, addMaterial } = useCourses();
   const { toast } = useToast();
   
   const [title, setTitle] = useState('');
@@ -50,8 +50,22 @@ const Upload: React.FC = () => {
     
     setUploading(true);
 
+    // Create a URL for the file
+    const fileUrl = file.type.includes('pdf') 
+      ? '/mocks/sample.pdf'  // In a real app, we would upload the file and get a URL
+      : '/mocks/sample.mp4'; // Mock video URL
+
     // Simulate upload with API call
     setTimeout(() => {
+      // Add the material to the course
+      addMaterial(courseId, {
+        id: Math.random().toString(36).substring(2, 9),
+        title,
+        type: fileType,
+        url: fileUrl,
+        date: new Date()
+      });
+
       toast({
         title: "Succès",
         description: "Document déposé avec succès",

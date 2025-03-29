@@ -1,3 +1,4 @@
+
 import React, { createContext, useContext, useState } from 'react';
 import { sendQuestion, sendQuiz } from '@/services/aiService';
 
@@ -13,19 +14,21 @@ export interface Message {
   correctAnswer?: string;
 }
 
+export interface Material {
+  id: string;
+  title: string;
+  type: 'pdf' | 'video';
+  url: string;
+  date: Date;
+}
+
 export interface Course {
   id: string;
   title: string;
   description: string;
   instructor: string;
   messages: Message[];
-  materials: {
-    id: string;
-    title: string;
-    type: 'pdf' | 'video';
-    url: string;
-    date: Date;
-  }[];
+  materials: Material[];
 }
 
 interface CoursesContextType {
@@ -34,6 +37,7 @@ interface CoursesContextType {
   setActiveCourse: (course: Course | null) => void;
   sendMessage: (courseId: string, content: string, questionType?: QuestionType, options?: string[], correctAnswer?: string) => void;
   getQuickQuestions: (courseId: string) => string[];
+  addMaterial: (courseId: string, material: Material) => void;
 }
 
 // Mock data
@@ -242,6 +246,25 @@ export const CoursesProvider: React.FC<{ children: React.ReactNode }> = ({ child
     return QUICK_QUESTIONS[courseId] || [];
   };
 
+  const addMaterial = (courseId: string, material: Material) => {
+    setCourses(prevCourses => 
+      prevCourses.map(course => 
+        course.id === courseId 
+          ? { ...course, materials: [...course.materials, material] } 
+          : course
+      )
+    );
+    
+    if (activeCourse?.id === courseId) {
+      setActiveCourse(prevCourse => 
+        prevCourse ? {
+          ...prevCourse,
+          materials: [...prevCourse.materials, material]
+        } : null
+      );
+    }
+  };
+
   return (
     <CoursesContext.Provider 
       value={{ 
@@ -249,7 +272,8 @@ export const CoursesProvider: React.FC<{ children: React.ReactNode }> = ({ child
         activeCourse, 
         setActiveCourse,
         sendMessage,
-        getQuickQuestions
+        getQuickQuestions,
+        addMaterial
       }}
     >
       {children}

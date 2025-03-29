@@ -1,9 +1,12 @@
 
 import React from 'react';
 import { NavLink } from 'react-router-dom';
-import { MessageSquare, BookOpen, User } from 'lucide-react';
+import { MessageSquare, BookOpen, User, Upload } from 'lucide-react';
+import { useAuth } from '@/context/AuthContext';
 
 const MobileNavigation: React.FC = () => {
+  const { isTeacher } = useAuth();
+
   return (
     <div className="mobile-nav flex justify-around items-center">
       <NavLink 
@@ -30,6 +33,20 @@ const MobileNavigation: React.FC = () => {
         <BookOpen size={24} />
         <span className="text-xs mt-1">Médiathèque</span>
       </NavLink>
+
+      {isTeacher && (
+        <NavLink 
+          to="/upload" 
+          className={({isActive}) => 
+            `flex flex-col items-center p-2 ${
+              isActive ? 'text-clarity-orange' : 'text-muted-foreground'
+            }`
+          }
+        >
+          <Upload size={24} />
+          <span className="text-xs mt-1">Ajouter</span>
+        </NavLink>
+      )}
 
       <NavLink 
         to="/profile" 
