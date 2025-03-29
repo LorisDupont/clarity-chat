@@ -8,12 +8,14 @@ import { useAuth } from '@/context/AuthContext';
 import { Button } from '@/components/ui/button';
 import { useNavigate } from 'react-router-dom';
 import { Upload } from 'lucide-react';
+import { useToast } from '@/hooks/use-toast';
 
 const Media: React.FC = () => {
   const { courses } = useCourses();
   const { isTeacher } = useAuth();
   const navigate = useNavigate();
-  const [selectedFile, setSelectedFile] = useState<{title: string, url: string} | null>(null);
+  const { toast } = useToast();
+  const [selectedFile, setSelectedFile] = useState<{title: string, url: string, type: 'pdf' | 'video'} | null>(null);
   
   // Aggregate all materials from all courses
   const allMaterials = courses.flatMap(course => 
@@ -26,12 +28,20 @@ const Media: React.FC = () => {
   const pdfMaterials = allMaterials.filter(m => m.type === 'pdf');
   const videoMaterials = allMaterials.filter(m => m.type === 'video');
   
-  const handleOpenFile = (title: string, url: string) => {
-    setSelectedFile({ title, url });
+  const handleOpenFile = (title: string, url: string, type: 'pdf' | 'video') => {
+    setSelectedFile({ title, url, type });
   };
   
   const handleCloseFile = () => {
     setSelectedFile(null);
+  };
+
+  const handleFileError = () => {
+    toast({
+      title: "Erreur",
+      description: "Échec de chargement du document. Veuillez réessayer.",
+      variant: "destructive",
+    });
   };
   
   return (
@@ -70,7 +80,7 @@ const Media: React.FC = () => {
                 title={material.title}
                 type={material.type}
                 date={new Date(material.date)}
-                onClick={() => handleOpenFile(material.title, material.url)}
+                onClick={() => handleOpenFile(material.title, material.url, material.type)}
               />
             ))}
           </div>
@@ -84,7 +94,7 @@ const Media: React.FC = () => {
                 title={material.title}
                 type={material.type}
                 date={new Date(material.date)}
-                onClick={() => handleOpenFile(material.title, material.url)}
+                onClick={() => handleOpenFile(material.title, material.url, material.type)}
               />
             ))}
           </div>
@@ -98,7 +108,7 @@ const Media: React.FC = () => {
                 title={material.title}
                 type={material.type}
                 date={new Date(material.date)}
-                onClick={() => handleOpenFile(material.title, material.url)}
+                onClick={() => handleOpenFile(material.title, material.url, material.type)}
               />
             ))}
           </div>
@@ -112,12 +122,34 @@ const Media: React.FC = () => {
             <DialogTitle className="text-clarity-orange">{selectedFile?.title}</DialogTitle>
           </DialogHeader>
           <div className="flex-1 h-full">
-            <iframe
-              src={selectedFile?.url}
-              title={selectedFile?.title}
-              className="w-full h-full"
-              style={{ minHeight: "500px" }}
-            />
+            {selectedFile?.type === 'pdf' ? (
+              <object
+                data={selectedFile.url}
+                type="application/pdf"
+                className="w-full h-full"
+                style={{ minHeight: "500px" }}
+                onError={handleFileError}
+              >
+                <div className="flex flex-col items-center justify-center h-full bg-gray-100 p-6 rounded">
+                  <p className="text-red-500 font-medium mb-2">Erreur de chargement du document PDF</p>
+                  <p className="text-sm text-gray-600 mb-4">Le navigateur ne peut pas afficher ce PDF directement.</p>
+                  <Button 
+                    onClick={() => window.open(selectedFile.url, '_blank')}
+                    className="bg-clarity-orange hover:bg-clarity-orange-dark text-white"
+                  >
+                    Ouvrir dans un nouvel onglet
+                  </Button>
+                </div>
+              </object>
+            ) : (
+              <iframe
+                src={selectedFile?.url}
+                title={selectedFile?.title}
+                className="w-full h-full"
+                style={{ minHeight: "500px" }}
+                onError={handleFileError}
+              />
+            )}
           </div>
         </DialogContent>
       </Dialog>
