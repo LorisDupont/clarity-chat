@@ -12,10 +12,18 @@ const Navigation: React.FC = () => {
     <div className="desktop-nav w-64">
       <div className="flex flex-col h-full">
         <div className="p-4">
-          <h1 className="text-2xl font-bold text-clarity-blue-dark">Clarity</h1>
-          <div className="mt-1 text-sm text-muted-foreground">Votre assistant d'études</div>
+          {/* <img src="../public/logoClarity.png" alt="Logo" className="w-20 h-20  -mr-3 -ml-6" /> */}
+          <h1 className="text-3xl font-bold text-clarity-blue-dark mb-3">
+            <span>c</span>
+            <span>l</span>
+            <span className="text-orange-500">a</span>
+            <span>r</span>
+            <span className="text-orange-500">i</span>
+            <span>t</span>
+            <span>y</span>
+          </h1>
+          <div className="-mt-4 text-sm text-muted-foreground">Votre assistant d'études</div>
         </div>
-
         <div className="flex items-center gap-3 px-4 py-2 mb-6">
           <div className="w-10 h-10 bg-clarity-blue rounded-full flex items-center justify-center text-white font-semibold">
             {user?.name.charAt(0)}

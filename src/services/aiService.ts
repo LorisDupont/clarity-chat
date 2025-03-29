@@ -11,15 +11,13 @@ const API_URL = 'http://10.120.2.23:8000/ai'; // À remplacer par l'URL réelle 
 // Service for sending a question to the AI API and getting a response
 export const sendQuestion = async (question: string, questionType: QuestionType = 'regular'): Promise<string> => {
   try {
+    const formData = new FormData();
+    formData.append('question', question);
+    formData.append('questionType', questionType);
+
     const response = await fetch(`${API_URL}/question`, {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        question,
-        questionType,
-      }),
+      body: formData,
     });
 
     if (!response.ok) {
