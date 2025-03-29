@@ -6,10 +6,10 @@ interface AIResponse {
 }
 
 // Configuration for the API endpoints
-const API_URL = 'http://test:8000/ai';
+const API_URL = 'http://10.120.2.23:8000/ai'; // À remplacer par l'URL réelle de l'API
 
 // Service for sending a question to the AI API and getting a response
-export const sendQuestion = async (question: string, courseId: string, questionType: QuestionType = 'regular'): Promise<string> => {
+export const sendQuestion = async (question: string, questionType: QuestionType = 'regular'): Promise<string> => {
   try {
     const response = await fetch(`${API_URL}/question`, {
       method: 'POST',
@@ -18,7 +18,6 @@ export const sendQuestion = async (question: string, courseId: string, questionT
       },
       body: JSON.stringify({
         question,
-        courseId,
         questionType,
       }),
     });
