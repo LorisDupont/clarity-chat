@@ -5,10 +5,10 @@ interface AIResponse {
   content: string;
 }
 
-// Configuration de base pour les appels API
-const API_URL = 'https://api.example.com/ai'; // À remplacer par l'URL réelle de l'API
+// Configuration for the API endpoints
+const API_URL = 'http://test:8000/ai';
 
-// Service pour envoyer une question à l'API IA et obtenir une réponse
+// Service for sending a question to the AI API and getting a response
 export const sendQuestion = async (question: string, courseId: string, questionType: QuestionType = 'regular'): Promise<string> => {
   try {
     const response = await fetch(`${API_URL}/question`, {
@@ -24,18 +24,18 @@ export const sendQuestion = async (question: string, courseId: string, questionT
     });
 
     if (!response.ok) {
-      throw new Error(`Erreur API: ${response.status}`);
+      throw new Error(`API Error: ${response.status}`);
     }
 
     const data: AIResponse = await response.json();
     return data.content;
   } catch (error) {
-    console.error('Erreur lors de l\'envoi de la question:', error);
+    console.error('Error sending question:', error);
     return "Je suis désolé, je ne peux pas répondre à cette question pour le moment. Veuillez réessayer plus tard.";
   }
 };
 
-// Service pour envoyer un quiz à l'API IA et obtenir une réponse
+// Service for sending a quiz to the AI API and getting a response
 export const sendQuiz = async (question: string, options: string[], courseId: string): Promise<string> => {
   try {
     const response = await fetch(`${API_URL}/quiz`, {
@@ -51,13 +51,13 @@ export const sendQuiz = async (question: string, options: string[], courseId: st
     });
 
     if (!response.ok) {
-      throw new Error(`Erreur API: ${response.status}`);
+      throw new Error(`API Error: ${response.status}`);
     }
 
     const data: AIResponse = await response.json();
     return data.content;
   } catch (error) {
-    console.error('Erreur lors de l\'envoi du quiz:', error);
+    console.error('Error sending quiz:', error);
     return "Je suis désolé, je ne peux pas évaluer ce quiz pour le moment. Veuillez réessayer plus tard.";
   }
 };

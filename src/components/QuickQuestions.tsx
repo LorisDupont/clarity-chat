@@ -11,15 +11,15 @@ const QuickQuestions: React.FC<QuickQuestionsProps> = ({ questions, onSelectQues
   if (!questions.length) return null;
   
   return (
-    <div className="p-2 space-y-2 border-l-4 border-clarity-orange bg-gradient-to-r from-clarity-orange-light/30 to-transparent my-4 rounded-r-md">
-      <div className="text-sm font-medium text-clarity-orange-dark">Questions rapides:</div>
+    <div className="p-3 space-y-3 border-l-4 border-clarity-orange bg-gradient-to-r from-clarity-orange/20 to-transparent my-4 rounded-r-md">
+      <div className="text-sm font-medium text-clarity-orange">Questions rapides:</div>
       <div className="flex flex-wrap gap-2">
         {questions.map((question, index) => (
           <Button
             key={index}
             variant="outline"
             size="sm"
-            className="text-xs rounded-full border-clarity-orange text-clarity-orange-dark hover:bg-clarity-orange hover:text-white"
+            className="text-xs rounded-full bg-clarity-orange/10 border-clarity-orange text-clarity-orange hover:bg-clarity-orange hover:text-white transition-colors"
             onClick={() => onSelectQuestion(question)}
           >
             {question}

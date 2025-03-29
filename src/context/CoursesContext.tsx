@@ -1,5 +1,5 @@
-
 import React, { createContext, useContext, useState } from 'react';
+import { sendQuestion, sendQuiz } from '@/services/aiService';
 
 export type QuestionType = 'regular' | 'quiz';
 
@@ -134,8 +134,15 @@ export const CoursesProvider: React.FC<{ children: React.ReactNode }> = ({ child
   const [courses, setCourses] = useState<Course[]>(MOCK_COURSES);
   const [activeCourse, setActiveCourse] = useState<Course | null>(null);
 
-  const sendMessage = (courseId: string, content: string, questionType: QuestionType = 'regular', options?: string[], correctAnswer?: string) => {
-    const newMessage: Message = {
+  const sendMessage = async (
+    courseId: string, 
+    content: string, 
+    questionType: QuestionType = 'regular', 
+    options?: string[], 
+    correctAnswer?: string
+  ) => {
+    // Create user message
+    const newUserMessage: Message = {
       id: Math.random().toString(36).substring(2, 9),
       sender: 'user',
       content,
@@ -145,51 +152,94 @@ export const CoursesProvider: React.FC<{ children: React.ReactNode }> = ({ child
       correctAnswer
     };
     
+    // Update state with user message first (for better UX)
     setCourses(prevCourses => 
       prevCourses.map(course => 
         course.id === courseId 
-          ? { 
-              ...course, 
-              messages: [...course.messages, newMessage, {
-                id: Math.random().toString(36).substring(2, 9),
-                sender: 'system',
-                content: getAutoResponse(content, questionType),
-                timestamp: new Date(Date.now() + 1000), // 1 second later
-                questionType
-              }] 
-            } 
+          ? { ...course, messages: [...course.messages, newUserMessage] } 
           : course
       )
     );
     
-    // Update active course if it's the current one
     if (activeCourse?.id === courseId) {
       setActiveCourse(prevCourse => 
         prevCourse ? {
           ...prevCourse,
-          messages: [...prevCourse.messages, newMessage, {
-            id: Math.random().toString(36).substring(2, 9),
-            sender: 'system',
-            content: getAutoResponse(content, questionType),
-            timestamp: new Date(Date.now() + 1000),
-            questionType
-          }]
+          messages: [...prevCourse.messages, newUserMessage]
         } : null
       );
+    }
+    
+    try {
+      // Send to API and get response
+      let responseContent: string;
+      
+      if (questionType === 'quiz' && options) {
+        responseContent = await sendQuiz(content, options, courseId);
+      } else {
+        responseContent = await sendQuestion(content, courseId, questionType);
+      }
+      
+      // Create system response message
+      const newSystemMessage: Message = {
+        id: Math.random().toString(36).substring(2, 9),
+        sender: 'system',
+        content: responseContent,
+        timestamp: new Date(),
+        questionType
+      };
+      
+      // Update state with system response
+      setCourses(prevCourses => 
+        prevCourses.map(course => 
+          course.id === courseId 
+            ? { ...course, messages: [...course.messages, newSystemMessage] } 
+            : course
+        )
+      );
+      
+      if (activeCourse?.id === courseId) {
+        setActiveCourse(prevCourse => 
+          prevCourse ? {
+            ...prevCourse,
+            messages: [...prevCourse.messages, newSystemMessage]
+          } : null
+        );
+      }
+      
+    } catch (error) {
+      console.error("Error getting AI response:", error);
+      
+      // Add error message
+      const errorMessage: Message = {
+        id: Math.random().toString(36).substring(2, 9),
+        sender: 'system',
+        content: "Désolé, je n'ai pas pu obtenir une réponse. Veuillez réessayer plus tard.",
+        timestamp: new Date(),
+        questionType
+      };
+      
+      setCourses(prevCourses => 
+        prevCourses.map(course => 
+          course.id === courseId 
+            ? { ...course, messages: [...course.messages, errorMessage] } 
+            : course
+        )
+      );
+      
+      if (activeCourse?.id === courseId) {
+        setActiveCourse(prevCourse => 
+          prevCourse ? {
+            ...prevCourse,
+            messages: [...prevCourse.messages, errorMessage]
+          } : null
+        );
+      }
     }
   };
 
   const getQuickQuestions = (courseId: string): string[] => {
     return QUICK_QUESTIONS[courseId] || [];
-  };
-
-  // Helper function to generate auto responses
-  const getAutoResponse = (question: string, type: QuestionType): string => {
-    if (type === 'quiz') {
-      return "Voici la réponse à votre quiz. Vérifiez si vous avez choisi la bonne option!";
-    }
-    
-    return `Voici une réponse à votre question: "${question}". Dans un vrai système, cette réponse serait générée par un professeur ou un système d'IA.`;
   };
 
   return (
