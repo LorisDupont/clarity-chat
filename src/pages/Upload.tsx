@@ -38,7 +38,7 @@ const Upload: React.FC = () => {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     if (!title || !courseId || !file) {
       toast({
         title: "Erreur",
@@ -112,7 +112,7 @@ const Upload: React.FC = () => {
                 </SelectTrigger>
                 <SelectContent>
                   {courses.map((course) => (
-                    <SelectItem key={course.id} value={course.id}>
+                    <SelectItem key={course.title} value={course.id}>
                       {course.title}
                     </SelectItem>
                   ))}

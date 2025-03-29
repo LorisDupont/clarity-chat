@@ -39,7 +39,7 @@ interface CoursesContextType {
 // Mock data
 const MOCK_COURSES: Course[] = [
   {
-    id: '10',
+    id: '1',
     title: 'Mathématiques',
     description: 'Algèbre et géométrie',
     instructor: 'Prof. Thomas Bernard',
@@ -62,13 +62,13 @@ const MOCK_COURSES: Course[] = [
     ]
   },
   {
-    id: '20',
+    id: '2',
     title: 'Physique',
     description: 'Mécanique et électricité',
     instructor: 'Dr. Marie Leroy',
     messages: [
       {
-        id: '145',
+        id: '1',
         sender: 'system',
         content: 'Bienvenue dans le cours de Physique. Comment puis-je vous aider?',
         timestamp: new Date('2023-05-10T10:00:00')
@@ -76,7 +76,7 @@ const MOCK_COURSES: Course[] = [
     ],
     materials: [
       {
-        id: '176',
+        id: '1',
         title: 'Lois de Newton',
         type: 'pdf',
         url: '/mocks/sample.pdf',
@@ -85,13 +85,13 @@ const MOCK_COURSES: Course[] = [
     ]
   },
   {
-    id: '30',
+    id: '3',
     title: 'Histoire',
     description: 'Histoire moderne',
     instructor: 'Prof. Jean Dupont',
     messages: [
       {
-        id: '133',
+        id: '1',
         sender: 'system',
         content: 'Bienvenue dans le cours d\'Histoire. Comment puis-je vous aider?',
         timestamp: new Date('2023-05-10T10:00:00')
@@ -99,7 +99,7 @@ const MOCK_COURSES: Course[] = [
     ],
     materials: [
       {
-        id: '14534',
+        id: '1',
         title: 'La Révolution française',
         type: 'pdf',
         url: '/mocks/sample.pdf',
@@ -177,7 +177,7 @@ export const CoursesProvider: React.FC<{ children: React.ReactNode }> = ({ child
       if (questionType === 'quiz' && options) {
         responseContent = await sendQuiz(content, options, courseId);
       } else {
-        responseContent = await sendQuestion(content, courseId, questionType);
+        responseContent = await sendQuestion(content);
       }
       
       // Create system response message

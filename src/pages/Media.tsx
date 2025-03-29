@@ -1,5 +1,5 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useCourses } from '@/context/CoursesContext';
 import MediaCard from '@/components/MediaCard';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
@@ -9,6 +9,8 @@ const Media: React.FC = () => {
   const { courses } = useCourses();
   const [selectedFile, setSelectedFile] = useState<{title: string, url: string} | null>(null);
   
+
+
   // Aggregate all materials from all courses
   const allMaterials = courses.flatMap(course => 
     course.materials.map(material => ({
@@ -16,7 +18,7 @@ const Media: React.FC = () => {
       courseName: course.title
     }))
   );
-  
+
   const pdfMaterials = allMaterials.filter(m => m.type === 'pdf');
   const videoMaterials = allMaterials.filter(m => m.type === 'video');
   
@@ -43,7 +45,7 @@ const Media: React.FC = () => {
           <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
             {allMaterials.map((material) => (
               <MediaCard
-                key={material.id}
+                key={material.courseName}
                 title={material.title}
                 type={material.type}
                 date={new Date(material.date)}
@@ -57,7 +59,7 @@ const Media: React.FC = () => {
           <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
             {pdfMaterials.map((material) => (
               <MediaCard
-                key={material.id}
+                key={material.courseName}
                 title={material.title}
                 type={material.type}
                 date={new Date(material.date)}
@@ -71,7 +73,7 @@ const Media: React.FC = () => {
           <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
             {videoMaterials.map((material) => (
               <MediaCard
-                key={material.id}
+                key={material.courseName}
                 title={material.title}
                 type={material.type}
                 date={new Date(material.date)}
